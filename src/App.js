@@ -6,6 +6,9 @@ import Button from "react-bootstrap/Button";
 import { weatherAPi } from "./api.js";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
+import clear from "../src/assets/clear.png";
+import cloudy from "../src/assets/cloudy.png";
+import rain from "../src/assets/rain.png";
 let element;
 function App() {
   let [city_name, setcity_name] = useState([]);
@@ -53,10 +56,16 @@ function App() {
         </Button>
 
         <br />
-        <div className="mt-5 d-flex justify-content-around">
-          {weatherdata.slice(0, 5).map((postion, index) => (
+        <div className="mt-5 d-flex flex-wrap justify-content-around">
+          {weatherdata.slice(0, 5).map((postion, index) => ( 
             <Card key={index} style={{ width: "12rem" }}>
-              <Card.Img variant="top" src="holder.js/100px180" />
+              <div>
+       {postion.weather[0].main ==='Rain' ? <Card.Img variant="top"src={rain} /> :null}  </div>
+       <div>
+       {postion.weather[0].main === 'Clouds'?<Card.Img variant="top"src={cloudy} /> :null}  </div>
+       <div>
+       {postion.weather[0].main ==='Clear'? <Card.Img variant="top"src={clear} />:null}  </div>
+               
               <Card.Body>
                 <Card.Title> {postion.weather[0].main}</Card.Title>
                 <Card.Text>
