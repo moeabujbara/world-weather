@@ -9,6 +9,7 @@ import Moment from "react-moment";
 import clear from "../src/assets/clear.png";
 import cloudy from "../src/assets/cloudy.png";
 import rain from "../src/assets/rain.png";
+
 let element;
 function App() {
   let [city_name, setcity_name] = useState([]);
@@ -41,33 +42,50 @@ function App() {
   }, []);
 
   return (
-    <div className=" text-center">
+    <div className="p-3 mb-2 bg-info text-white text-center">
       <h3 className="mt-3 font-weight-bold">Hello , select your city !</h3>
       <div className="ml-4  flex-right">
-        <input type="search" id="city"></input>
+        <input
+          type="text"
+          id="city"
+          className="px-10 py-10 shadow-lg bg-grey rounded"
+          placeholder="Search"
+        />
         <br />
+
         <Button
           onClick={updateInputValue}
-          className="mt-2"
-          variant="primary"
-          size="sm"
+          className="mt-2 btn btn-warning rounded"
+          size="md"
         >
           Check Weather
         </Button>
 
         <br />
         <div className="mt-5 d-flex flex-wrap justify-content-around">
-          {weatherdata.slice(0, 5).map((postion, index) => ( 
-            <Card key={index} style={{ width: "12rem" }}>
+          {weatherdata.slice(0, 5).map((postion, index) => (
+            <Card.Header style="background-color:black" key={index} style={{ width: "12rem" }}>
               <div>
-       {postion.weather[0].main ==='Rain' ? <Card.Img variant="top"src={rain} /> :null}  </div>
-       <div>
-       {postion.weather[0].main === 'Clouds'?<Card.Img variant="top"src={cloudy} /> :null}  </div>
-       <div>
-       {postion.weather[0].main ==='Clear'? <Card.Img variant="top"src={clear} />:null}  </div>
-               
+                {postion.weather[0].main === "Rain" ? (
+                  <Card.Img variant="top" src={rain} />
+                ) : null}{" "}
+              </div>
+              <div>
+                {postion.weather[0].main === "Clouds" ? (
+                  <Card.Img variant="top" src={cloudy} />
+                ) : null}{" "}
+              </div>
+              <div>
+                {postion.weather[0].main === "Clear" ? (
+                  <Card.Img variant="top" src={clear} />
+                ) : null}{" "}
+              </div>
+
               <Card.Body>
-                <Card.Title> {postion.weather[0].main}</Card.Title>
+                <Card.Title className="font-weight-bold">
+                  {" "}
+                  {postion.weather[0].main}
+                </Card.Title>
                 <Card.Text>
                   <Moment format="yy-MM-d">
                     <h6>{postion.dt_txt} </h6>
@@ -76,7 +94,7 @@ function App() {
                   <h6>Min: {postion.main.temp_min}</h6>
                 </Card.Text>
               </Card.Body>
-            </Card>
+            </Card.Header>
           ))}
         </div>
       </div>
