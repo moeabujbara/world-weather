@@ -5,7 +5,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { weatherAPi } from "./api.js";
 import { useEffect, useState } from "react";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 let element;
 function App() {
   let [city_name, setcity_name] = useState([]);
@@ -38,35 +38,38 @@ function App() {
   }, []);
 
   return (
-    <div classNameName="m-4 text-center">
-      <h3>Hello , select your city !</h3>
-      <div classNameName="ml-4 flex-right">
+    <div className=" text-center">
+      <h3 className="mt-3 font-weight-bold">Hello , select your city !</h3>
+      <div className="ml-4  flex-right">
         <input type="search" id="city"></input>
+        <br />
         <Button
           onClick={updateInputValue}
-          classNameName="ml-2"
+          className="mt-2"
           variant="primary"
+          size="sm"
         >
-          Weather Check
+          Check Weather
         </Button>
 
-        {weatherdata.slice(0, 5).map((postion, index) => (
-          <div className=" mt-5 container" key={index}>
-            <div className="row">
-              <div className="col-sm">
-                <h3>{postion.main.temp}</h3>
-                <h3>{postion.dt_txt}</h3>
-                <h3>{postion.main.temp_max}</h3>
-                <h3>{postion.main.temp_min}</h3>
-                
-              </div>
-              <div className="col-sm">One of three columns</div>
-              <div className="col-sm">One of three columns</div>
-              <div className="col-sm">One of three columns</div>
-              <div className="col-sm">One of three columns</div>
-            </div>
-          </div>
-        ))}
+        <br />
+        <div className="mt-5 d-flex justify-content-around">
+          {weatherdata.slice(0, 5).map((postion, index) => (
+            <Card key={index} style={{ width: "12rem" }}>
+              <Card.Img variant="top" src="holder.js/100px180" />
+              <Card.Body>
+                <Card.Title> {postion.weather[0].main}</Card.Title>
+                <Card.Text>
+                  <Moment format="yy-MM-d">
+                    <h6>{postion.dt_txt} </h6>
+                  </Moment>
+                  <h6>Max: {postion.main.temp_max}</h6>
+                  <h6>Min: {postion.main.temp_min}</h6>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
