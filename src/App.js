@@ -3,7 +3,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { weatherAPi } from "./api.js";
+import { weatherAPi, coordinates } from "./api.js";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import clear from "../src/assets/clear.png";
@@ -16,6 +16,8 @@ function App() {
   let [temp, settemp] = useState([]);
   let [error, setError] = useState([]);
   let [weatherdata, setweatherdata] = useState([]);
+  let [currentdate, setcurrentdate] = useState([]);
+  let [Geographical, setGeographical] = useState([]);
   let [bool, setbool] = useState("false");
 
   const updateInputValue = () => {
@@ -28,10 +30,19 @@ function App() {
 
   const fetch = async (props) => {
     try {
-      let response = await weatherAPi(props);
-      setweatherdata(response.data.list, weatherdata);
-      console.warn("response for data -->", response.data.list);
-      console.warn("Array of weather-->", weatherdata);
+      let response = await coordinates(props);
+      setGeographical(response.data.results[0].geometry, Geographical);
+      console.warn("response for data -->", response.data.results[0].geometry);
+      console.warn("Geographical-->", Geographical.lat);
+      console.warn("Geographical-->", Geographical.lng);
+      let weatherresponse = await weatherAPi(
+        Geographical.lat,
+        Geographical.lng
+      );
+      setweatherdata(weatherresponse.data.daily, weatherdata);
+      console.warn("reponse--->", weatherresponse.data);
+
+      console.warn("weatherdata", weatherdata);
     } catch (error) {
       setError(error.message);
     }
@@ -44,6 +55,7 @@ function App() {
   return (
     <div className="p-3 mb-2 bg-info text-white text-center">
       <h3 className="mt-3 font-weight-bold">Hello , select your city !</h3>
+      <div className="m-0"></div>
       <div className="ml-4  flex-right">
         <input
           type="text"
@@ -60,11 +72,14 @@ function App() {
         >
           Check Weather
         </Button>
-
         <br />
         <div className="mt-5 d-flex flex-wrap justify-content-around">
           {weatherdata.slice(0, 5).map((postion, index) => (
-            <Card.Header style="background-color:black" key={index} style={{ width: "12rem" }}>
+            <Card.Header
+              style="background-color:black"
+              key={index}
+              style={{ width: "12rem" }}
+            >
               <div>
                 {postion.weather[0].main === "Rain" ? (
                   <Card.Img variant="top" src={rain} />
@@ -87,11 +102,12 @@ function App() {
                   {postion.weather[0].main}
                 </Card.Title>
                 <Card.Text>
-                  <Moment format="yy-MM-d">
-                    <h6>{postion.dt_txt} </h6>
-                  </Moment>
-                  <h6>Max: {postion.main.temp_max}</h6>
-                  <h6>Min: {postion.main.temp_min}</h6>
+                <h6>
+              <Moment format="MMMM DD, YYYY">{postion.dt}</Moment>{" "}
+            </h6>
+                  <br />
+                  <h6>high: {postion.temp.max}</h6>
+                  <h6>low: {postion.temp.min}</h6>
                 </Card.Text>
               </Card.Body>
             </Card.Header>
