@@ -3,13 +3,12 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { weatherAPi, coordinates } from "./api.js";
+import { weatherAPi, coordinates, weatherAPitemp } from "./api.js";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import clear from "../src/assets/clear.png";
 import cloudy from "../src/assets/cloudy.png";
 import rain from "../src/assets/rain.png";
-
 let element;
 function App() {
   let [city_name, setcity_name] = useState([]);
@@ -19,6 +18,10 @@ function App() {
   let [currentdate, setcurrentdate] = useState([]);
   let [Geographical, setGeographical] = useState([]);
   let [bool, setbool] = useState("false");
+  let [newarray, setnewarray] = useState([]);
+  let [selected,setselected]=useState("false");
+  let [ctemp,setctemp]=useState([]);
+  let [key,setkey]=useState([]);
 
   const updateInputValue = () => {
     var country = document.getElementById("city").value;
@@ -27,7 +30,28 @@ function App() {
     console.warn("city name is; ", city_name);
     setbool(true);
   };
+  const toggleSelected =() => {
+   if (selected) {
+    weatherdata.slice(0,5).forEach((element, i)=>{
+      let x= (element.temp.max-30)/2;
+      let y= (element.temp.min-30)/2;
+    document.getElementById('highTemp' + i).innerHTML=x.toPrecision(4) +"C";
+    document.getElementById('lowTemp' + i).innerHTML=y.toPrecision(4)+"C";
+    setselected(false);
+   })
+     
+   } else {
+    weatherdata.slice(0,5).forEach((element, i)=>{
+      let x= (element.temp.max);
+      let y= (element.temp.min);
+    document.getElementById('highTemp' + i).innerHTML=x.toPrecision(4) +"F";
+    document.getElementById('lowTemp' + i).innerHTML=y.toPrecision(4)+"F";
+    setselected(true);
+   })
+     
+   }
 
+  };
   const fetch = async (props) => {
     try {
       let response = await coordinates(props);
@@ -40,7 +64,7 @@ function App() {
         Geographical.lng
       );
       setweatherdata(weatherresponse.data.daily, weatherdata);
-      console.warn("reponse--->", weatherresponse.data);
+      console.warn("reponse--->", weatherresponse.data.daily);
 
       console.warn("weatherdata", weatherdata);
     } catch (error) {
@@ -72,10 +96,16 @@ function App() {
         >
           Check Weather
         </Button>
+        <div className="" id="toggle-container" onClick={toggleSelected}>
+        <div className={`dialog-button ${selected ? "" : "disabled"}`}>
+          {selected ? "F" : "C"}
+        </div>
+      </div>
         <br />
-        <div className="mt-5 d-flex flex-wrap justify-content-around">
-          {weatherdata.slice(0, 5).map((postion, index) => (
-            <Card.Header
+        <div className="mt-5 d-flex flex-wrap justify-content-around" id="main">
+          {weatherdata.slice(0, 5).map((postion,index) => (
+          
+            <Card.Header id={"weather-card"}
               style="background-color:black"
               key={index}
               style={{ width: "12rem" }}
@@ -98,20 +128,20 @@ function App() {
 
               <Card.Body>
                 <Card.Title className="font-weight-bold">
-                  {" "}
                   {postion.weather[0].main}
                 </Card.Title>
                 <Card.Text>
-                <h6>
-              <Moment format="MMMM DD, YYYY">{postion.dt}</Moment>{" "}
-            </h6>
+                  <h6>
+                    <Moment>{postion.td}</Moment>
+                  </h6>
                   <br />
-                  <h6>high: {postion.temp.max}</h6>
-                  <h6>low: {postion.temp.min}</h6>
+                  <h6 >high: <span id={"highTemp"+index}>{postion.temp.max} F</span></h6>
+                  <h6 >low: <span id={"lowTemp"+index}>{postion.temp.min} F</span></h6>
                 </Card.Text>
               </Card.Body>
             </Card.Header>
           ))}
+        
         </div>
       </div>
     </div>
