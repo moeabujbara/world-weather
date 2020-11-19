@@ -9,64 +9,57 @@ import Moment from "react-moment";
 import clear from "../src/assets/clear.png";
 import cloudy from "../src/assets/cloudy.png";
 import rain from "../src/assets/rain.png";
+import Weatherforyourlocation from "./weatherforyourlocation";
 let element;
 function App() {
-  let [city_name, setcity_name] = useState([]);
   let [temp, settemp] = useState([]);
   let [error, setError] = useState([]);
   let [weatherdata, setweatherdata] = useState([]);
   let [currentdate, setcurrentdate] = useState([]);
-  let [Geographical, setGeographical] = useState([]);
-  let [bool, setbool] = useState("false");
+  let [bool, setbool] = useState(false);
   let [newarray, setnewarray] = useState([]);
-  let [selected,setselected]=useState("false");
-  let [ctemp,setctemp]=useState([]);
-  let [key,setkey]=useState([]);
+  let [selected, setselected] = useState(true);
+  let [ctemp, setctemp] = useState([]);
+  let [key, setkey] = useState([]);
+  let [check, setcheck] = useState(false);
 
   const updateInputValue = () => {
+    setcheck(true);
     var country = document.getElementById("city").value;
-    setcity_name(country);
     fetch(country);
-    console.warn("city name is; ", city_name);
     setbool(true);
   };
-  const toggleSelected =() => {
-   if (selected) {
-    weatherdata.slice(0,5).forEach((element, i)=>{
-      let x= (element.temp.max-30)/2;
-      let y= (element.temp.min-30)/2;
-    document.getElementById('highTemp' + i).innerHTML=x.toPrecision(4) +"C";
-    document.getElementById('lowTemp' + i).innerHTML=y.toPrecision(4)+"C";
-    setselected(false);
-   })
-     
-   } else {
-    weatherdata.slice(0,5).forEach((element, i)=>{
-      let x= (element.temp.max);
-      let y= (element.temp.min);
-    document.getElementById('highTemp' + i).innerHTML=x.toPrecision(4) +"F";
-    document.getElementById('lowTemp' + i).innerHTML=y.toPrecision(4)+"F";
-    setselected(true);
-   })
-     
-   }
-
+  const toggleSelected = () => {
+    if (selected) {
+      weatherdata.slice(0, 5).forEach((element, i) => {
+        let x = (element.temp.max - 30) / 2;
+        let y = (element.temp.min - 30) / 2;
+        document.getElementById("highTemp" + i).innerHTML =
+          x.toPrecision(4) + "C";
+        document.getElementById("lowTemp" + i).innerHTML =
+          y.toPrecision(4) + "C";
+        setselected(false);
+      });
+    } else {
+      setselected(true);
+      weatherdata.slice(0, 5).forEach((element, i) => {
+        let x = element.temp.max;
+        let y = element.temp.min;
+        document.getElementById("highTemp" + i).innerHTML =
+          x.toPrecision(4) + "F";
+        document.getElementById("lowTemp" + i).innerHTML =
+          y.toPrecision(4) + "F";
+      });
+    }
   };
   const fetch = async (props) => {
     try {
       let response = await coordinates(props);
-      setGeographical(response.data.results[0].geometry, Geographical);
-      console.warn("response for data -->", response.data.results[0].geometry);
-      console.warn("Geographical-->", Geographical.lat);
-      console.warn("Geographical-->", Geographical.lng);
       let weatherresponse = await weatherAPi(
-        Geographical.lat,
-        Geographical.lng
+        response.data.results[0].geometry.lat,
+        response.data.results[0].geometry.lng
       );
       setweatherdata(weatherresponse.data.daily, weatherdata);
-      console.warn("reponse--->", weatherresponse.data.daily);
-
-      console.warn("weatherdata", weatherdata);
     } catch (error) {
       setError(error.message);
     }
@@ -88,7 +81,6 @@ function App() {
           placeholder="Search"
         />
         <br />
-
         <Button
           onClick={updateInputValue}
           className="mt-2 btn btn-warning rounded"
@@ -97,52 +89,64 @@ function App() {
           Check Weather
         </Button>
         <div className="" id="toggle-container" onClick={toggleSelected}>
-        <div className={`dialog-button ${selected ? "" : "disabled"}`}>
-          {selected ? "F" : "C"}
+          <div className={`dialog-button ${selected ? "" : "disabled"}`}>
+            {selected ? "F" : "C"}
+          </div>
         </div>
-      </div>
         <br />
-        <div className="mt-5 d-flex flex-wrap justify-content-around" id="main">
-          {weatherdata.slice(0, 5).map((postion,index) => (
-          
-            <Card.Header id={"weather-card"}
-              style="background-color:black"
-              key={index}
-              style={{ width: "12rem" }}
-            >
-              <div>
-                {postion.weather[0].main === "Rain" ? (
-                  <Card.Img variant="top" src={rain} />
-                ) : null}{" "}
-              </div>
-              <div>
-                {postion.weather[0].main === "Clouds" ? (
-                  <Card.Img variant="top" src={cloudy} />
-                ) : null}{" "}
-              </div>
-              <div>
-                {postion.weather[0].main === "Clear" ? (
-                  <Card.Img variant="top" src={clear} />
-                ) : null}{" "}
-              </div>
+        {check ? (
+          <div
+            className="mt-5 d-flex flex-wrap justify-content-around"
+            id="main"
+          >
+            {weatherdata.slice(0, 5).map((postion, index) => (
+              <Card.Header
+                id={"weather-card"}
+                style="background-color:black"
+                key={index}
+                style={{ width: "12rem" }}
+              >
+                <div>
+                  {postion.weather[0].main === "Rain" ? (
+                    <Card.Img variant="top" src={rain} />
+                  ) : null}{" "}
+                </div>
+                <div>
+                  {postion.weather[0].main === "Clouds" ? (
+                    <Card.Img variant="top" src={cloudy} />
+                  ) : null}{" "}
+                </div>
+                <div> 
+                  {postion.weather[0].main === "Clear" ? (
+                    <Card.Img variant="top" src={clear} />
+                  ) : null}{" "}
+                </div>
 
-              <Card.Body>
-                <Card.Title className="font-weight-bold">
-                  {postion.weather[0].main}
-                </Card.Title>
-                <Card.Text>
-                  <h6>
-                    <Moment>{postion.td}</Moment>
-                  </h6>
-                  <br />
-                  <h6 >high: <span id={"highTemp"+index}>{postion.temp.max} F</span></h6>
-                  <h6 >low: <span id={"lowTemp"+index}>{postion.temp.min} F</span></h6>
-                </Card.Text>
-              </Card.Body>
-            </Card.Header>
-          ))}
-        
-        </div>
+                <Card.Body>
+                  <Card.Title className="font-weight-bold">
+                    {postion.weather[0].main}
+                  </Card.Title>
+                  <Card.Text>
+                    <h6>
+                      <Moment>{postion.td}</Moment>
+                    </h6>
+                    <br />
+                    <h6>
+                      high:{" "}
+                      <span id={"highTemp" + index}>{postion.temp.max} F</span>
+                    </h6>
+                    <h6>
+                      low:{" "}
+                      <span id={"lowTemp" + index}>{postion.temp.min} F</span>
+                    </h6>
+                  </Card.Text>
+                </Card.Body>
+              </Card.Header>
+            ))}
+          </div>
+        ) : (
+          <Weatherforyourlocation />
+        )}
       </div>
     </div>
   );
