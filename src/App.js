@@ -3,15 +3,21 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { weatherAPi, coordinates, weatherAPitemp } from "./api.js";
-import { useEffect, useState } from "react";
+import { weatherAPi} from "./api.js";
+import {coordinatesf} from "./api.js";
+import { useEffect, useState ,useRef } from "react";
 import Moment from "react-moment";
 import clear from "../src/assets/clear.png";
 import cloudy from "../src/assets/cloudy.png";
 import rain from "../src/assets/rain.png";
 import Weatherforyourlocation from "./weatherforyourlocation";
+import React, { Component } from 'react';
+import GoogleMapReact from 'google-map-react';
+import { lang } from "moment";
+import MapContainer from './viewmap.js';
+
 let element;
-function App() {
+function App(props) {
   let [temp, settemp] = useState([]);
   let [error, setError] = useState([]);
   let [weatherdata, setweatherdata] = useState([]);
@@ -22,7 +28,10 @@ function App() {
   let [ctemp, setctemp] = useState([]);
   let [key, setkey] = useState([]);
   let [check, setcheck] = useState(false);
-
+  let [coordinates, setcoordinates] = useState([]);
+  let [center,setcenter]=useState([]);
+  
+  
   const updateInputValue = () => {
     setcheck(true);
     var country = document.getElementById("city").value;
@@ -52,28 +61,27 @@ function App() {
       });
     }
   };
-  const fetch = async (props) => {
-    try {
-      let response = await coordinates(props);
+   fetch = async (props) => {
+       try{
+      let response = await coordinatesf(props);
+      setcenter(response.data.results[0].geometry,center);
       let weatherresponse = await weatherAPi(
         response.data.results[0].geometry.lat,
         response.data.results[0].geometry.lng
       );
-      setweatherdata(weatherresponse.data.daily, weatherdata);
-    } catch (error) {
-      setError(error.message);
-    }
+      setweatherdata(weatherresponse.data.daily, weatherdata);}
+      catch (error) {
+        setError(error.message);
+      }
   };
-
   useEffect(() => {
     fetch();
   }, []);
 
   return (
-    <div className="p-3 mb-2 bg-info text-white text-center">
+    <div className=" mb-2 bg-info text-white text-center position:relative overflow-auto">
       <h3 className="mt-3 font-weight-bold">Hello , select your city !</h3>
-      <div className="m-0"></div>
-      <div className="ml-4  flex-right">
+      <div className="ml-4 flex-right">
         <input
           type="text"
           id="city"
@@ -88,17 +96,24 @@ function App() {
         >
           Check Weather
         </Button>
-        <div className="" id="toggle-container" onClick={toggleSelected}>
+        {check ? (
+      <div className="mb-5">
+      <MapContainer  data={center}> </MapContainer>
+           </div>
+       ):
+       (null)}
+        <div id="toggle-container" onClick={toggleSelected}>
           <div className={`dialog-button ${selected ? "" : "disabled"}`}>
             {selected ? "F" : "C"}
           </div>
         </div>
-        <br />
-        {check ? (
+       <br />
+          {check ? (
           <div
-            className="mt-5 d-flex flex-wrap justify-content-around"
+            className="mt-5 d-flex flex-wrap justify-content-around "
             id="main"
           >
+            
             {weatherdata.slice(0, 5).map((postion, index) => (
               <Card.Header
                 id={"weather-card"}
@@ -116,7 +131,7 @@ function App() {
                     <Card.Img variant="top" src={cloudy} />
                   ) : null}{" "}
                 </div>
-                <div> 
+                <div>
                   {postion.weather[0].main === "Clear" ? (
                     <Card.Img variant="top" src={clear} />
                   ) : null}{" "}
