@@ -1,9 +1,26 @@
+.mb-5{
+  position:absolute;
+  right:0px;
+  top:0px;
+  margin-top:10px ;
+  margin-right:5px;
+}
 #toggle-container {
     width: 70px;
     background-color: #c4c4c4;
     cursor: pointer;
     border-radius: 3px;
     height: 32px;
+  }
+  .Map {
+    color:white;
+    background-color:blue;
+    padding: 15px 10px;
+    display: inline-flex;
+    text-align: center;
+    align-items: center;
+    justify-content:center;
+    transform:(-50%, -50%);
   }
   
   .dialog-button {
