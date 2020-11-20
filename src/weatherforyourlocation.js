@@ -45,15 +45,15 @@ export default function Getloctiondata() {
       {array.slice(0, 5).map((postion, index) => (
         <div key={index} className="mr-5">
           <div className="card-title">
-            {postion.weather[0].main =="Rain" ? (
+            {postion.weather[0].main ==="Rain" ? (
               <div variant="top" src={rain} />
             ) : null}{" "}
 
-          {postion.weather[0].main == "Clouds" ? (
+          {postion.weather[0].main === "Clouds" ? (
               <div variant="top" src={cloudy}/>
             ) : null}{" "}
 
-          {postion.weather[0].main == "Clear" ? (
+          {postion.weather[0].main ==="Clear" ? (
               <Card.Img variant="top" src={clear}/>
             ) : null}{" "}
           </div>
