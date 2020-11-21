@@ -15,6 +15,7 @@ import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import { lang } from "moment";
 import MapContainer from './viewmap.js';
+import snow from "../src/assets/snowy.png";
 
 let element;
 function App(props) {
@@ -69,7 +70,9 @@ function App(props) {
         response.data.results[0].geometry.lat,
         response.data.results[0].geometry.lng
       );
-      setweatherdata(weatherresponse.data.daily, weatherdata);}
+      setweatherdata(weatherresponse.data.daily, weatherdata);
+      console.warn("orginal",weatherresponse.data)
+      console.warn("weatherdatadat",weatherdata)}
       catch (error) {
         setError(error.message);
       }
@@ -102,11 +105,15 @@ function App(props) {
            </div>
        ):
        (null)}
-        <div id="toggle-container" onClick={toggleSelected}>
-          <div className={`dialog-button ${selected ? "" : "disabled"}`}>
-            {selected ? "F" : "C"}
-          </div>
-        </div>
+       {check ?(
+         <div id="toggle-container" onClick={toggleSelected}>
+         <div className={`dialog-button ${selected ? "" : "disabled"}`}>
+           {selected ? "F" : "C"}
+         </div>
+       </div>
+       ):
+        (null)
+      }
        <br />
           {check ? (
           <div
@@ -122,6 +129,9 @@ function App(props) {
                 style={{ width: "12rem" }}
               >
                 <div>
+                {postion.weather[0].main =="Snow" ? (
+                <Card.Img variant="top" src={snow} />
+              ) : null}
                   {postion.weather[0].main === "Rain" ? (
                     <Card.Img variant="top" src={rain} />
                   ) : null}{" "}
@@ -143,7 +153,7 @@ function App(props) {
                   </Card.Title>
                   <Card.Text>
                     <h6>
-                      <Moment>{postion.td}</Moment>
+                  <Moment unix format="D-MM-yyyy">{postion.dt}</Moment>
                     </h6>
                     <br />
                     <h6>

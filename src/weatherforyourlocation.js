@@ -5,76 +5,105 @@ import Moment from "react-moment";
 import clear from "../src/assets/clear.png";
 import cloudy from "../src/assets/cloudy.png";
 import rain from "../src/assets/rain.png";
+import snow from "../src/assets/snowy.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { render } from "react-dom";
-import './weatherforyourlocation.css'
+import "./weatherforyourlocation.css";
 
 export default function Getloctiondata() {
   let [array, setarray] = useState([]);
-  let [lat,setlat]=useState([]);
-  let [lang,setlang]=useState([]);
+  let [lat, setlat] = useState([]);
+  let [lang, setlang] = useState([]);
   let [check, setcheck] = useState(false);
-   
-  if (check===false) {
-    setcheck(true);
+  let [selected, setselected] = useState(true);
+  
+   if (!check) {
+     setcheck(true)
     navigator.geolocation.getCurrentPosition(function(position) {
       console.log("Latitude is :", position.coords.latitude);
-      setlat(position.coords.latitude);
       console.log("Longitude is :", position.coords.longitude);
-      setlang(position.coords.longitude)
+      fetch(position.coords.latitude,position.coords.longitude)
     });
-  };
- 
+     
+   }
 
-  const fetch = async () => {
-    if (check) {
-      let response = await weatherAPi(31.963158,35.930359);
+  const fetch = async (lat,lng) => {
+  let response = await weatherAPi(lat,lng);
       setarray(response.data.hourly, array);
       console.warn("your hourly data is going to be", response);
-      
-    }
   };
   useEffect(() => {
     fetch();
+    
   }, []);
+  const toggleSelected = () => {
+    if (selected) {
+      array.slice(0, 5).forEach((element, i) => {
+        let x = (element.temp - 30) / 2;
+        document.getElementById("highTemp" + i).innerHTML =
+          x.toPrecision(4) + "C";
+        setselected(false);
+      });
+    } else {
+      setselected(true);
+      array.slice(0, 5).forEach((element, i) => {
+        let x = element.temp;
+        document.getElementById("highTemp" + i).innerHTML =
+          x.toPrecision(4) +  "F";
+      });
+    }
+  };
 
   return (
-    <div id="mainCard" className="p-2 pl-5 justify-content-between card d-flex flex-row  mx-auto " style={{width:50+'rem'}}>
-      {array.slice(0, 5).map((postion, index) => (
-        <div key={index} className="mr-5">
-          <div className="card-title">
-            {postion.weather[0].main ==="Rain" ? (
-              <div variant="top" src={rain} />
-            ) : null}{" "}
+    <div>
+      <div id="toggle-container" onClick={toggleSelected}>
+        <div className={`dialog-button ${selected ? "" : "disabled"}`}>
+          {selected ? "F" : "C"}
+        </div>
+      </div>
+      <div
+        id="mainCard"
+        className="p-5 card d-flex flex-row  mx-auto font-weight-bold "
+        style={{ width: 50 + "rem" }}
+      >
+        {array.slice(0, 5).map((postion, index) => (
+          <div key={index}>
+            <div className="card-title">
+            {postion.weather[0].main =="Snow" ? (
+                <Card.Img variant="top" src={snow} />
+              ) : null}
+              {postion.weather[0].main =="Rain" ? (
+                <Card.Img variant="top" src={rain} />
+              ) : null}
+              {postion.weather[0].main == "Clouds" ? (
+                <Card.Img variant="top" src={cloudy} />
+              ) : null}
+              {postion.weather[0].main =="Clear" ? (
+                <Card.Img variant="top" src={clear} />
+              ) : null}
+               
+            </div>
 
-          {postion.weather[0].main === "Clouds" ? (
-              <div variant="top" src={cloudy}/>
-            ) : null}{" "}
+            <div className="card-text text-black ">
+              {postion.weather[0].main}
+            </div>
 
-          {postion.weather[0].main ==="Clear" ? (
-              <Card.Img variant="top" src={clear}/>
-            ) : null}{" "}
+            <div className="mt-4">
+              <h6 className="text-black font-weight-bold">
+                <Moment unix format="hh:mm">{postion.dt}</Moment>
+              </h6>
+            </div>
+            <br />
+            <div className="card-text text-black">
+              <h6 className="font-weight-bold">
+                high: <span id={"highTemp" + index}>{postion.temp} F</span>
+              </h6>
+            </div>
           </div>
-
-        
-          <div className="card-text text-black">{postion.weather[0].main}</div>
-
-          <div className="card-text">
-            <h6 className="text-black">
-              <Moment format="hh:mm:ss a">{postion.sunset}</Moment>
-            </h6>
-          </div>
-
-          <br />
-          <div className="card-text text-black">
-            <h6>
-              high: <span id={"highTemp" + index}>{postion.temp} F</span>
-            </h6>
-          </div>
-          </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
