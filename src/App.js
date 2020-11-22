@@ -84,7 +84,7 @@ function App(props) {
   return (
     <div className=" mb-2 bg-info text-white text-center position:relative overflow-auto">
       <h3 className="mt-3 font-weight-bold">Hello , select your city !</h3>
-      <div className="ml-4 flex-right">
+      <div className="flex-right">
         <input
           type="text"
           id="city"
@@ -99,17 +99,17 @@ function App(props) {
         >
           Check Weather
         </Button>
-        {check ? (
-      <div className="mb-5">
-      <MapContainer  data={center}> </MapContainer>
-           </div>
-       ):
-       (null)}
+     
        {check ?(
-         <div id="toggle-container" onClick={toggleSelected}>
-         <div className={`dialog-button ${selected ? "" : "disabled"}`}>
+         <div className="d-flex flex-column flex-md-row justify-content-between">
+           <div id="f">
+           <MapContainer  data={center}> </MapContainer>
+           </div>
+         <div id="toggle-container" className="mt-5 mt-md-0" onClick={toggleSelected}>
+         <div className={`dialog-button mt-0 ${selected ? "" : "disabled"}`}>
            {selected ? "F" : "C"}
          </div>
+       </div>
        </div>
        ):
         (null)
@@ -117,7 +117,7 @@ function App(props) {
        <br />
           {check ? (
           <div
-            className="mt-5 d-flex flex-wrap justify-content-around "
+            className="mt-5 d-flex flex-wrap justify-content-around flex-row mx-auto"
             id="main"
           >
             
@@ -127,11 +127,14 @@ function App(props) {
                 style="background-color:black"
                 key={index}
                 style={{ width: "12rem" }}
+                className="mx-auto mb-3"
               >
                 <div>
                 {postion.weather[0].main =="Snow" ? (
                 <Card.Img variant="top" src={snow} />
               ) : null}
+              </div>
+              <div>
                   {postion.weather[0].main === "Rain" ? (
                     <Card.Img variant="top" src={rain} />
                   ) : null}{" "}
@@ -168,6 +171,7 @@ function App(props) {
                 </Card.Body>
               </Card.Header>
             ))}
+
           </div>
         ) : (
           <Weatherforyourlocation />
