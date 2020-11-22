@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import App from './App.js'
+import "./viewmap.css"
 
 
 class MyClass extends Component {
@@ -22,7 +23,7 @@ class MyClass extends Component {
       // bootstrapURLKeys={{ key:'AIzaSyADvYN9O8i0-6ZFwwX_o13YMNKbA7qnKtw' }}
         center={this.props.data}
         defaultZoom={this.props.zoom}
-        style={{height: '200px',width :'400px',float:'right' }}
+        style={{height: '200px'}}
       >
       </GoogleMapReact >
     );
