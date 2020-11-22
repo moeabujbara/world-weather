@@ -10,10 +10,12 @@ color:black;
     cursor: pointer;
     background-color:orange;
     color: white;
-    padding: 8px 8px;
+    
     border-radius: 18px;
     min-width: 46px;
     justify-content: center;
+    padding-right:5px;
+    margin-top:8px;
     align-items: center;
     width: 38px;
     min-width: unset;
