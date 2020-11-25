@@ -20,7 +20,7 @@ class MyClass extends Component {
     return (
       <GoogleMapReact
       resetBoundsOnResize={true}
-      // bootstrapURLKeys={{ key:'AIzaSyADvYN9O8i0-6ZFwwX_o13YMNKbA7qnKtw' }}
+      // bootstrapURLKeys={{ key:'AIzaSyBHcsEySl6K1qDDJHowEzDTmEsi2GjFTeA' }}
         center={this.props.data}
         defaultZoom={this.props.zoom}
         style={{height: '200px'}}

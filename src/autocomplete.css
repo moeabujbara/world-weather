@@ -1,0 +1,28 @@
+*{
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    color:gray;
+ }
+ 
+ .search-container{
+    width: 100%;
+ }
+ .search-container input{
+    width: 50%;
+    height: 40px;
+    font-size: 25px;
+ }
+ 
+ .list-container li{
+    width: 50%;
+    height: 40px;
+    list-style: none;
+    border: 1px solid gray;
+    font-size: 25px;
+    color:black;
+    background-color: white;
+ }
+ li:hover {
+    background-color:orange;
+  }
