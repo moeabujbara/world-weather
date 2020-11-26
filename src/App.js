@@ -8,17 +8,13 @@ import { coordinatesf } from "./api.js";
 import { autocompleteApi } from "./api.js";
 import { useEffect, useState, useRef } from "react";
 import Moment from "react-moment";
-import clear from "../src/assets/clear.png";
-import cloudy from "../src/assets/cloudy.png";
-import rain from "../src/assets/rain.png";
 import Weatherforyourlocation from "./weatherforyourlocation";
 import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
 import { lang } from "moment";
 import MapContainer from "./viewmap.js";
-import snow from "../src/assets/snowy.png";
 import Autocomplete from "./autocomplete.js";
-
+import blue from "../src/assets/blue.jpg";
 
 function App(props) {
   let [temp, settemp] = useState([]);
@@ -35,9 +31,8 @@ function App(props) {
   let [center, setcenter] = useState([]);
   let [input, setInput] = useState([]);
   let [exported, setexported] = useState([]);
- 
+  let [windspeed,setwindspeed]=useState([]);
 
- 
   const updateInputValue = () => {
     console.warn("exported data is goin to be", exported);
     setcheck(true);
@@ -77,6 +72,7 @@ function App(props) {
         response.data.results[0].geometry.lng
       );
       setweatherdata(weatherresponse.data.daily, weatherdata);
+      console.warn("weatherdata",weatherdata)
     } catch (error) {
       setError(error.message);
     }
@@ -85,24 +81,28 @@ function App(props) {
     fetch();
   }, []);
 
-  const handleChange=(newvalue)=>{
+  const handleChange = (newvalue) => {
     setexported(newvalue);
-  }
- 
+  };
+
   return (
-    <div className=" mb-2 bg-info text-white text-center position:relative overflow-auto">
+    <div className="text-white text-center overflow-auto container">
       <h3 className="mt-3 font-weight-bold">Hello , select your city !</h3>
       <div className="flex-right">
-        <Autocomplete value={props.value} onChange={handleChange}></Autocomplete>
-        <br/>
+        <Autocomplete
+          value={props.value}
+          onChange={handleChange}
+        ></Autocomplete>
+        <br />
         <button
-          className="mt-2 btn btn-warning rounded"
+          id="button"
+          className="mt-2 btn btn-info rounded"
           size="md"
           onClick={updateInputValue}
         >
           Check Weather
         </button>
-        
+
         {check ? (
           <div className="d-flex flex-column flex-md-row justify-content-between">
             <div id="f">
@@ -123,61 +123,68 @@ function App(props) {
         ) : null}
         <br />
         {check ? (
-          <div
-            className="mt-5 d-flex flex-wrap justify-content-around flex-row mx-auto"
-            id="main"
-          >
-            {weatherdata.slice(0, 5).map((postion, index) => (
-              <Card.Header
-                id={"weather-card"}
-                style="background-color:black"
-                key={index}
-                style={{ width: "12rem" }}
-                className="mx-auto mb-3"
+          <div className="d-flex flex-wrap justify-content-between mt-3 text-white font-weight-bold">
+            {weatherdata.slice(0, 6).map((postion, index) => (
+              <div
+                id="card"
               >
-                <div>
-                  {postion.weather[0].main == "Snow" ? (
-                    <Card.Img variant="top" src={snow} />
-                  ) : null}
-                </div>
-                <div>
-                  {postion.weather[0].main === "Rain" ? (
-                    <Card.Img variant="top" src={rain} />
-                  ) : null}{" "}
-                </div>
-                <div>
-                  {postion.weather[0].main === "Clouds" ? (
-                    <Card.Img variant="top" src={cloudy} />
-                  ) : null}{" "}
-                </div>
-                <div>
-                  {postion.weather[0].main === "Clear" ? (
-                    <Card.Img variant="top" src={clear} />
-                  ) : null}{" "}
-                </div>
+                <div className="row h-100">
+                  <div className="col-6">
+                    <ul className="list-inline">
+                      {postion.weather[0].main == "Snow" ? (
+                        <li>
+                          {" "}
+                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          {postion.weather[0].main}
+                        </li>
+                      ) : null}
 
-                <Card.Body>
-                  <Card.Title className="font-weight-bold">
-                    {postion.weather[0].main}
-                  </Card.Title>
-                  <Card.Text>
-                    <h6>
+                      {postion.weather[0].main == "Rain" ? (
+                        <li>
+                          {" "}
+                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          {postion.weather[0].main}
+                        </li>
+                      ) : null}
+
+                      {postion.weather[0].main == "Clouds" ? (
+                        <li>
+                          {" "}
+                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          {postion.weather[0].main}
+                        </li>
+                      ) : null}
+                      {postion.weather[0].main == "Clear" ? (
+                        <li>
+                          {" "}
+                          <img src="http://svgshare.com/i/1fu.svg" alt="" />
+                          {postion.weather[0].main}
+                        </li>
+                      ) : null}
+                    </ul>
+                    <h6 id="tag">
+                      {" "}
+                      <span id={"highTemp" + index}>
+                        high:{postion.temp.max} F
+                      </span>
+                    </h6>
+                  </div>
+                  <div className="col-6">
+                    <div id="time">
                       <Moment unix format="D-MM-yyyy">
                         {postion.dt}
                       </Moment>
-                    </h6>
-                    <br />
-                    <h6>
-                      high:{" "}
-                      <span id={"highTemp" + index}>{postion.temp.max} F</span>
-                    </h6>
-                    <h6>
-                      low:{" "}
-                      <span id={"lowTemp" + index}>{postion.temp.min} F</span>
-                    </h6>
-                  </Card.Text>
-                </Card.Body>
-              </Card.Header>
+                    </div>
+
+                      <p className="city mt-1 ml-3">{postion.dew_point}</p>
+                    <div className="x">
+                      <span id={"lowTemp" + index}>
+                        low:{postion.temp.min} F
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         ) : (

@@ -2,15 +2,13 @@ import React from "react";
 import { weatherAPi } from "./api.js";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
-import clear from "../src/assets/clear.png";
-import cloudy from "../src/assets/cloudy.png";
-import rain from "../src/assets/rain.png";
-import snow from "../src/assets/snowy.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { render } from "react-dom";
 import "./weatherforyourlocation.css";
+import blue from "../src/assets/download.jpeg";
+
 
 export default function Getloctiondata() {
   let [array, setarray] = useState([]);
@@ -18,6 +16,7 @@ export default function Getloctiondata() {
   let [lang, setlang] = useState([]);
   let [check, setcheck] = useState(false);
   let [selected, setselected] = useState(true);
+  let [timezone, settimezone] = useState([]);
 
   if (!check) {
     setcheck(true);
@@ -31,6 +30,7 @@ export default function Getloctiondata() {
   const fetch = async (lat, lng) => {
     let response = await weatherAPi(lat, lng);
     setarray(response.data.hourly, array);
+    settimezone(response.data.timezone, timezone);
     console.warn("your hourly data is going to be", response);
   };
   useEffect(() => {
@@ -56,51 +56,82 @@ export default function Getloctiondata() {
 
   return (
     <div>
-      <div id="toggle-container" onClick={toggleSelected}>
-        <div className={`dialog-button ${selected ? "" : "disabled"}`}>
-          {selected ? "F" : "C"}
-        </div>
-      </div>
       <div
-        id="mainCard"
-        className="mt-3 p-5 card d-flex justify-content-between flex-wrap flex-row  mx-auto text-black font-weight-bold"
-      >
-        {array.slice(0, 5).map((postion, index) => (
-          <div className="mx-auto mb-3 mb-md-0"  style={{ width: "12rem" }} key={index}>
-            <div className="card-title">
-              {postion.weather[0].main == "Snow" ? (
-                <Card.Img variant="top" src={snow} />
-              ) : null}
-              {postion.weather[0].main == "Rain" ? (
-                <Card.Img variant="top" src={rain} />
-              ) : null}
-              {postion.weather[0].main == "Clouds" ? (
-                <Card.Img variant="top" src={cloudy} />
-              ) : null}
-              {postion.weather[0].main == "Clear" ? (
-                <Card.Img variant="top" src={clear} />
-              ) : null}
+              id="toggle-container"
+              className="mt-5 mt-md-0"
+              onClick={toggleSelected}
+            >
+              <div
+                className={`dialog-button mt-0 ${selected ? "" : "disabled"}`}
+              >
+                {selected ? "F" : "C"}
+              </div>
             </div>
-            <div className="card-text">
-              {postion.weather[0].main}
+      <div className="d-flex flex-wrap justify-content-between mt-3 text-white font-weight-bold ">
+        {array.slice(0, 6).map((postion, index) => (
+          <div
+            id="card"
+            className=""
+          >
+            <div className="row h-100 ">
+            <div className="col-6">
+              <ul className="list-inline ">
+                {postion.weather[0].main == "Snow" ? (
+                  <li>
+                    {" "}
+                    <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                    {postion.weather[0].main}
+                  </li>
+                ) : null}
+
+                {postion.weather[0].main == "Rain" ? (
+                  <li>
+                    {" "}
+                    <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                    {postion.weather[0].main}
+                  </li>
+                ) : null}
+
+                {postion.weather[0].main == "Clouds" ? (
+                  <li>
+                    {" "}
+                    <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                    {postion.weather[0].main}
+                  </li>
+                ) : null}
+                {postion.weather[0].main == "Clear" ? (
+                  <li>
+                    {" "}
+                    <img src="http://svgshare.com/i/1fu.svg" alt="" />
+                    {postion.weather[0].main}
+                  </li>
+                ) : null}
+              </ul>
+              <h6>
+                {" "}
+                h: <span id={"highTemp" + index}>{postion.temp} F</span>
+              </h6>
+
             </div>
-            <div className="card-text mt-3 font-weight-bold">
-              <h6 className="font-weight-bold">
+            <div className="col-6">
+
+              <div id="time">
                 <Moment unix format="hh:mm">
                   {postion.dt}
                 </Moment>
-              </h6>
               </div>
-            <br />
-            <div className="card-text">
-              <h6 className="font-weight-bold">
-                high: <span id={"highTemp" + index}>{postion.temp} F</span>
-              </h6>
+
+              <p className="city mt-1 ml-3">{timezone}</p>
+
+              <div className="x">Wind/s {postion.wind_speed}</div>
             </div>
-             <hr></hr>
+          
+              </div>
+            
+          
           </div>
         ))}
       </div>
-    </div>
+      </div>
   );
 }

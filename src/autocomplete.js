@@ -41,8 +41,8 @@ const Global =(event)=>{
 
 }
     return (
-      <div class="container ">
-        <div class="search-container text-center">
+      <div>
+        <div className="search-container text-center mt-3">
       <input
       value={props.value}
       type="search"
@@ -51,15 +51,16 @@ const Global =(event)=>{
        className="form-control mdb-autocomplete "
        placeholder="Enter your country name"
       onChange={Global}/>
-      </div>
-      <ul class="list-container" id ="list-container">
+      <div className="list-container" id="list-container">
         {movie_data.slice(0,4).map((postion, index) => (
           <div onClick={() => select3(postion.formatted)}>
-     <li><small>{postion.formatted}</small></li>
+     <li className="new-list"><small>{(postion.formatted).substring(0,30)}</small></li>
     </div>
         ))}
-         </ul>
-       </div>
+         </div>
+
+      </div>
+         </div>
     );
   };
 
