@@ -15,6 +15,11 @@ import { lang } from "moment";
 import MapContainer from "./viewmap.js";
 import Autocomplete from "./autocomplete.js";
 import blue from "../src/assets/blue.jpg";
+import Filterbox from "./filterbox.js";
+import Hourly from "./hourly";
+import Daily from './daily.js';
+import Weekly from './weekly.js'
+import Ten from './ten-day.js'
 
 function App(props) {
   let [temp, settemp] = useState([]);
@@ -31,7 +36,9 @@ function App(props) {
   let [center, setcenter] = useState([]);
   let [input, setInput] = useState([]);
   let [exported, setexported] = useState([]);
-  let [windspeed,setwindspeed]=useState([]);
+  let [windspeed, setwindspeed] = useState([]);
+  let [hourly,sethourly]=useState([]);
+  let [filter,setfilter]=useState(false);
 
   const updateInputValue = () => {
     console.warn("exported data is goin to be", exported);
@@ -42,7 +49,7 @@ function App(props) {
 
   const toggleSelected = () => {
     if (selected) {
-      weatherdata.slice(0, 5).forEach((element, i) => {
+      weatherdata.slice(0, 6).forEach((element, i) => {
         let x = (element.temp.max - 30) / 2;
         let y = (element.temp.min - 30) / 2;
         document.getElementById("highTemp" + i).innerHTML =
@@ -53,7 +60,7 @@ function App(props) {
       });
     } else {
       setselected(true);
-      weatherdata.slice(0, 5).forEach((element, i) => {
+      weatherdata.slice(0, 6).forEach((element, i) => {
         let x = element.temp.max;
         let y = element.temp.min;
         document.getElementById("highTemp" + i).innerHTML =
@@ -72,7 +79,7 @@ function App(props) {
         response.data.results[0].geometry.lng
       );
       setweatherdata(weatherresponse.data.daily, weatherdata);
-      console.warn("weatherdata",weatherdata)
+      console.warn("weatherdata", weatherdata);
     } catch (error) {
       setError(error.message);
     }
@@ -84,26 +91,46 @@ function App(props) {
   const handleChange = (newvalue) => {
     setexported(newvalue);
   };
+  const handleChange_hourly=(newvalue)=>{
+    sethourly(newvalue);
+    setfilter(true);
+    console.warn("hourly from app",hourly)
+  }
 
   return (
     <div className="text-white text-center overflow-auto container">
-      <h3 className="mt-3 font-weight-bold">Hello , select your city !</h3>
+      <h3 className="mt-2 font-weight-bold">Hello , select your city !</h3>
       <div className="flex-right">
+      <Filterbox value={props.value}
+          onClick={handleChange_hourly}></Filterbox>
         <Autocomplete
           value={props.value}
           onChange={handleChange}
         ></Autocomplete>
         <br />
-        <button
+        {exported=="" ? (
+           <button
+           id="button"
+           className="mt-2 btn btn-info rounded "
+           size="md"
+           onClick={updateInputValue}
+           disabled
+         >
+           Check Weather
+         </button>
+        )
+        :( <button
           id="button"
-          className="mt-2 btn btn-info rounded"
+          className="mt-2 btn btn-info rounded "
           size="md"
           onClick={updateInputValue}
         >
           Check Weather
-        </button>
-
-        {check ? (
+        </button>)
+        }
+       
+        <br></br>
+        {check && filter==false ? (
           <div className="d-flex flex-column flex-md-row justify-content-between">
             <div id="f">
               <MapContainer data={center}> </MapContainer>
@@ -122,12 +149,29 @@ function App(props) {
           </div>
         ) : null}
         <br />
-        {check ? (
+    {hourly=='hourly-weather' && check==true  ?(<Hourly 
+    hourdata={exported}
+    >
+    </Hourly>)
+    :(null)}
+    {hourly=='daily-weather' && check==true  ?(<Daily
+    dailydata={exported}
+    >
+    </Daily>)
+    :(null)}
+    {hourly=='weekly-weather' && check==true  ?(<Weekly
+    weeklydata={exported}
+    ></Weekly>)
+    :(null)}
+    {hourly=='ten-days-weather' && check==true  ?(<Ten
+    tendata={exported}
+    >
+    </Ten>)
+    :(null)}
+        {check==true && filter==false? (
           <div className="d-flex flex-wrap justify-content-between mt-3 text-white font-weight-bold">
             {weatherdata.slice(0, 6).map((postion, index) => (
-              <div
-                id="card"
-              >
+              <div id="card">
                 <div className="row h-100">
                   <div className="col-6">
                     <ul className="list-inline">
@@ -176,7 +220,7 @@ function App(props) {
                       </Moment>
                     </div>
 
-                      <p className="city mt-1 ml-3">{postion.dew_point}</p>
+                    <p className="city mt-1 ml-3">{postion.dew_point}</p>
                     <div className="x">
                       <span id={"lowTemp" + index}>
                         low:{postion.temp.min} F
@@ -187,11 +231,11 @@ function App(props) {
               </div>
             ))}
           </div>
-        ) : (
-          <Weatherforyourlocation />
-        )}
+        ):(null)} 
+        {check != true && filter==false ? (<Weatherforyourlocation/>):(null)}
       </div>
     </div>
+   
   );
 }
 

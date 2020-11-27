@@ -4,7 +4,7 @@ export const weatherAPi = (lat,lon) => {
     
   };
   export const coordinatesf = (props) => {
-    return axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${props}&key=553335345bdc4388b436485f7b8be407`);
+    return axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${props}&key=6ab50404c44048db898036968cfedc2f`);
   };
   
 
