@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import App from './App.js'
 import "./viewmap.css"
+import './hourly.js'
 
 
 class MyClass extends Component {

@@ -19,7 +19,7 @@ let [movie_data,setmovie_data]=useState([]);
     updateInputValue();
   }, []);  
 
-  const  handleChange=(event)=> {
+  const  handleChange1=(event)=> {
     props.onChange(event.target.value);
     var x = document.getElementById("form-autocomplete").value;
     if(x == "")
@@ -37,19 +37,20 @@ const select3 =(props)=>{
 
 const Global =(event)=>{
   updateInputValue(event);
-  handleChange(event);
+  handleChange1(event);
 
 }
     return (
       <div>
-        <div className="search-container text-center mt-3">
+      <div className="search-container text-center mt-3">
       <input
+      required
       value={props.value}
       type="search"
       autoComplete="off"
        id="form-autocomplete"
-       className="form-control mdb-autocomplete "
-       placeholder="Enter your country name"
+       className="form-control mdb-autocomplete"
+       placeholder="Country Name required"
       onChange={Global}/>
       <div className="list-container" id="list-container">
         {movie_data.slice(0,4).map((postion, index) => (

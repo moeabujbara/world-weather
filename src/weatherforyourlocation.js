@@ -3,12 +3,9 @@ import { weatherAPi } from "./api.js";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import { render } from "react-dom";
 import "./weatherforyourlocation.css";
 import blue from "../src/assets/download.jpeg";
-
 
 export default function Getloctiondata() {
   let [array, setarray] = useState([]);
@@ -53,7 +50,6 @@ export default function Getloctiondata() {
       });
     }
   };
-
   return (
     <div>
       <div
