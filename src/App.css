@@ -1,3 +1,63 @@
+body{
+  padding-top: 200px;
+}
+#card{
+  height: 100px;
+  margin-bottom: 80px;
+  width: 350px;
+  position: relative;
+  border-radius: 30px;
+  background-color:orange;
+  padding: 10px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0px 7px 30px 2px rgba(0,0,0,0.18);
+}
+ img{
+      width: 60px;
+    font-size: 17px;
+    padding-right: 25px;
+  }
+  .x{
+    position: absolute;
+    bottom: 0;
+    right: 33px;
+  }
+
+
+  h1{
+    color:white;
+    position: absolute;
+    left: 10px;
+    bottom: 0px;
+  }
+  .date{
+    /* position: absolute;
+    right: 10px;
+    top: 10px; */
+    text-align: right;
+    color: white;
+  }
+  .city{
+    /* position: absolute; */
+  }
+
+
+.list-inline{
+  margin-bottom: 0 !important;
+  padding-right: 30px;
+}
+
+#tag{
+  /* position: absolute;
+  padding-top: 22px;
+  margin:10px; */
+  left: 33px;
+  position: absolute;
+  bottom:0;
+  margin-bottom:0;
+}
+
 .mb-5{
   position:absolute;
   right:0px;
@@ -5,13 +65,7 @@
   margin-top:10px ;
   margin-right:5px;
 }
-#toggle-container {
-    width: 70px;
-    background-color: #c4c4c4;
-    cursor: pointer;
-    border-radius: 3px;
-    height: 32px;
-  }
+
   .Map {
     color:white;
     background-color:blue;
@@ -21,6 +75,13 @@
     align-items: center;
     justify-content:center;
     transform:(-50%, -50%);
+  }
+  #toggle-container {
+    width: 70px;
+    background-color: #c4c4c4;
+    cursor: pointer;
+    border-radius: 3px;
+    height: 32px;
   }
   
   .dialog-button {
