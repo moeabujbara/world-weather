@@ -80,7 +80,7 @@ function App(props) {
     try {
       let response = await coordinatesf(props);
       setcenter(response.data.results[0].geometry, center);
-      let weatherresponse = await arabicWeatherApi(
+      let weatherresponse = await weatherAPi(
         response.data.results[0].geometry.lat,
         response.data.results[0].geometry.lng
       );
