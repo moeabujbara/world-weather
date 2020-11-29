@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import { coordinatesf } from "./api.js";
 import "./weekly.css"
-
+import snow from './assets/snow.svg';
+import rain from './assets/rain.svg';
+import cloud from './assets/clouds.svg';
+import clear from './assets/clear.svg';
 
 const TenDays = (props) => {
   let [array, setarray] = useState([]);
@@ -75,7 +78,7 @@ const TenDays = (props) => {
                       {postion.weather[0].main == "Snow" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          <img src={snow} alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
@@ -83,7 +86,7 @@ const TenDays = (props) => {
                       {postion.weather[0].main == "Rain" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          <img src={rain} alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
@@ -91,14 +94,14 @@ const TenDays = (props) => {
                       {postion.weather[0].main == "Clouds" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          <img src={cloud} alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
                       {postion.weather[0].main == "Clear" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1fu.svg" alt="" />
+                          <img src={clear} alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
