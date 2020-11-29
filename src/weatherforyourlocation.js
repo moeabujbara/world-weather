@@ -7,6 +7,11 @@ import { render } from "react-dom";
 import "./weatherforyourlocation.css";
 import blue from "../src/assets/download.jpeg";
 import {arabicWeatherApi} from "./api.js"
+import snow from './assets/snow.svg';
+import rain from './assets/rain.svg';
+import cloud from './assets/clouds.svg';
+import clear from './assets/clear.svg';
+
 
 export default function Getloctiondata() {
   let [array, setarray] = useState([]);
@@ -79,16 +84,15 @@ export default function Getloctiondata() {
               <ul className="list-inline ">
                 {postion.weather[0].main == "Snow" ? (
                   <li id={"snow"+index}>
-                    {" "}
-                    <img src="http://svgshare.com/i/1eq.svg" alt="" />
-                   <span>{postion.weather[0].main}</span>
+                    <img src={snow} />
+                    <span>{postion.weather[0].main}</span>
                   </li>
                 ) : null}
 
                 {postion.weather[0].main == "Rain" ? (
                   <li>
                     {" "}
-                    <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                    <img src={rain} />
                     {postion.weather[0].main}
                   </li>
                 ) : null}
@@ -96,14 +100,14 @@ export default function Getloctiondata() {
                 {postion.weather[0].main == "Clouds" ? (
                   <li>
                     {" "}
-                    <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                    <img src={cloud} alt="" />
                     {postion.weather[0].main}
                   </li>
                 ) : null}
                 {postion.weather[0].main == "Clear" ? (
                   <li>
                     {" "}
-                    <img src="http://svgshare.com/i/1fu.svg" alt="" />
+                    <img src={clear} alt="" />
                     {postion.weather[0].main}
                   </li>
                 ) : null}
