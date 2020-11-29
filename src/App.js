@@ -1,15 +1,15 @@
+import React, {Suspense} from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { weatherAPi } from "./api.js";
+import { weatherAPi,arabicWeatherApi } from "./api.js";
 import { coordinatesf } from "./api.js";
 import { autocompleteApi } from "./api.js";
 import { useEffect, useState, useRef } from "react";
 import Moment from "react-moment";
 import Weatherforyourlocation from "./weatherforyourlocation";
-import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
 import { lang } from "moment";
 import MapContainer from "./viewmap.js";
@@ -18,8 +18,9 @@ import blue from "../src/assets/blue.jpg";
 import Filterbox from "./filterbox.js";
 import Hourly from "./hourly";
 import Daily from './daily.js';
-import Weekly from './weekly.js'
-import Ten from './ten-day.js'
+import Weekly from './weekly.js';
+import Ten from './ten-day.js';
+
 
 function App(props) {
   let [temp, settemp] = useState([]);
@@ -74,7 +75,7 @@ function App(props) {
     try {
       let response = await coordinatesf(props);
       setcenter(response.data.results[0].geometry, center);
-      let weatherresponse = await weatherAPi(
+      let weatherresponse = await arabicWeatherApi(
         response.data.results[0].geometry.lat,
         response.data.results[0].geometry.lng
       );
@@ -98,8 +99,12 @@ function App(props) {
   }
 
   return (
+
     <div className="text-white text-center overflow-auto container">
-      <h3 className="mt-2 font-weight-bold">Hello , select your city !</h3>
+   <Suspense fallback="loading">
+   <h3 className="mt-2 font-weight-bold">Hello , select your city !</h3>
+     </Suspense> 
+     
       <div className="flex-right">
       <Filterbox value={props.value}
           onClick={handleChange_hourly}></Filterbox>
@@ -132,7 +137,7 @@ function App(props) {
         <br></br>
         {check && filter==false ? (
           <div className="d-flex flex-column flex-md-row justify-content-between">
-            <div id="f">
+            <div className="mt-3" id="f">
               <MapContainer data={center}> </MapContainer>
             </div>
             <div
@@ -169,7 +174,7 @@ function App(props) {
     </Ten>)
     :(null)}
         {check==true && filter==false? (
-          <div className="d-flex flex-wrap justify-content-between mt-3 text-white font-weight-bold">
+          <div className="d-flex flex-wrap justify-content-center justify-content-lg-between mt-3 text-white font-weight-bold">
             {weatherdata.slice(0, 6).map((postion, index) => (
               <div id="card">
                 <div className="row h-100">
@@ -208,8 +213,8 @@ function App(props) {
                     </ul>
                     <h6 id="tag">
                       {" "}
-                      <span id={"highTemp" + index}>
-                        high:{postion.temp.max} F
+                      high:<span id={"highTemp" + index}>
+                       {postion.temp.max} F
                       </span>
                     </h6>
                   </div>
@@ -222,8 +227,8 @@ function App(props) {
 
                     <p className="city mt-1 ml-3">{postion.dew_point}</p>
                     <div className="x">
-                      <span id={"lowTemp" + index}>
-                        low:{postion.temp.min} F
+                    low:<span id={"lowTemp" + index}>
+                       {postion.temp.min} F
                       </span>
                     </div>
                   </div>

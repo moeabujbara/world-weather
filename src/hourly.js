@@ -64,7 +64,7 @@ const Hourly = (props) => {
               </div>
             </div>
       
-    <div className="d-flex flex-wrap justify-content-between mt-3 text-white font-weight-bold ">
+    <div className="d-flex flex-wrap justify-content-center justify-content-lg-between mt-3 text-white font-weight-bold ">
     {array.slice(0, 6).map((postion, index) => (
       <div
         id="card"
@@ -106,7 +106,7 @@ const Hourly = (props) => {
           </ul>
           <h6>
             {" "}
-            h: <span id={"highTemp" + index}>{postion.temp} F</span>
+            high: <span id={"highTemp" + index}>{postion.temp} F</span>
           </h6>
 
         </div>

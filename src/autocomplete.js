@@ -50,12 +50,12 @@ const Global =(event)=>{
       autoComplete="off"
        id="form-autocomplete"
        className="form-control mdb-autocomplete"
-       placeholder="Country Name required"
+       placeholder="Country-Name"
       onChange={Global}/>
       <div className="list-container" id="list-container">
         {movie_data.slice(0,4).map((postion, index) => (
           <div onClick={() => select3(postion.formatted)}>
-     <li className="new-list"><small>{(postion.formatted).substring(0,30)}</small></li>
+     <li className="new-list"><small>{(postion.formatted).substring(0,15)}</small></li>
     </div>
         ))}
          </div>
@@ -67,3 +67,5 @@ const Global =(event)=>{
 
 
 export default Autocomplete;
+
+

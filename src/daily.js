@@ -102,10 +102,10 @@ const Daily = (props) => {
                         </li>
                       ) : null}
                     </ul>
-                    <h6 id="tag">
+                    <h6 className="font-weight-bold"id="tag">
                       {" "}
-                      <span id={"highTemp" + index}>
-                        high:{postion.temp.max} F
+                      high:<span id={"highTemp" + index}>
+                        {postion.temp.max} F
                       </span>
                     </h6>
                   </div>
@@ -117,9 +117,9 @@ const Daily = (props) => {
                     </div>
 
                     <p className="city mt-1 ml-3">{timezone}</p>
-                     <div className="x">
-                      <span id={"lowTemp" + index}>
-                        low:{postion.temp.min} F
+                     <div className="x ">
+                     low: <span id={"lowTemp" + index}>
+                      {postion.temp.min} F
                       </span>
                     </div> 
                   </div>
