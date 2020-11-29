@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { render } from "react-dom";
 import "./weatherforyourlocation.css";
 import blue from "../src/assets/download.jpeg";
+import {arabicWeatherApi} from "./api.js"
 
 export default function Getloctiondata() {
   let [array, setarray] = useState([]);
@@ -14,6 +15,8 @@ export default function Getloctiondata() {
   let [check, setcheck] = useState(false);
   let [selected, setselected] = useState(true);
   let [timezone, settimezone] = useState([]);
+  let [language,setlanguage]=useState(false);
+  let x;
 
   if (!check) {
     setcheck(true);
@@ -25,7 +28,7 @@ export default function Getloctiondata() {
   }
 
   const fetch = async (lat, lng) => {
-    let response = await weatherAPi(lat, lng);
+    let response = await weatherAPi(lat,lng);
     setarray(response.data.hourly, array);
     settimezone(response.data.timezone, timezone);
     console.warn("your hourly data is going to be", response);
@@ -33,6 +36,8 @@ export default function Getloctiondata() {
   useEffect(() => {
     fetch();
   }, []);
+ 
+
   const toggleSelected = () => {
     if (selected) {
       array.slice(0, 5).forEach((element, i) => {
@@ -63,7 +68,7 @@ export default function Getloctiondata() {
                 {selected ? "F" : "C"}
               </div>
             </div>
-      <div className="d-flex flex-wrap justify-content-between mt-3 text-white font-weight-bold ">
+      <div className="d-flex flex-wrap justify-content-center justify-content-lg-between mt-3 text-white font-weight-bold ">
         {array.slice(0, 6).map((postion, index) => (
           <div
             id="card"
@@ -73,10 +78,10 @@ export default function Getloctiondata() {
             <div className="col-6">
               <ul className="list-inline ">
                 {postion.weather[0].main == "Snow" ? (
-                  <li>
+                  <li id={"snow"+index}>
                     {" "}
                     <img src="http://svgshare.com/i/1eq.svg" alt="" />
-                    {postion.weather[0].main}
+                   <span>{postion.weather[0].main}</span>
                   </li>
                 ) : null}
 
@@ -103,9 +108,9 @@ export default function Getloctiondata() {
                   </li>
                 ) : null}
               </ul>
-              <h6>
+              <h6 className="font-weight-bold">
                 {" "}
-                h: <span id={"highTemp" + index}>{postion.temp} F</span>
+                high: <span id={"highTemp" + index}>{postion.temp} F</span>
               </h6>
 
             </div>

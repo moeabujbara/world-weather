@@ -66,7 +66,7 @@ const Weekly = (props) => {
                 {selected ? "F" : "C"}
               </div>
             </div>
-      <div className="d-flex flex-wrap justify-content-between mt-3 text-white font-weight-bold text-center">
+      <div className="d-flex flex-wrap justify-content-center justify-content-lg-between mt-3 text-white font-weight-bold text-center">
             {array.slice(0,6).map((postion, index) => (
               <div id="card">
                 <div className="row h-100">
@@ -103,10 +103,10 @@ const Weekly = (props) => {
                         </li>
                       ) : null}
                     </ul>
-                    <h6 id="tag">
+                    <h6 className="font" id="tag">
                       {" "}
-                      <span id={"highTemp" + index}>
-                        high:{postion.temp.max} F
+                      high:<span id={"highTemp" + index}>
+                       {postion.temp.max} F
                       </span>
                     </h6>
                   </div>
@@ -119,8 +119,8 @@ const Weekly = (props) => {
 
                     <p className="city mt-1 ml-3">{timezone}</p>
                      <div className="x">
-                      <span id={"lowTemp" + index}>
-                        low:{postion.temp.min} F
+                     low:<span id={"lowTemp" + index}>
+                        {postion.temp.min} F
                       </span>
                     </div> 
                   </div>
