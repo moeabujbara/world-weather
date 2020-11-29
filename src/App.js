@@ -20,6 +20,10 @@ import Hourly from "./hourly";
 import Daily from './daily.js';
 import Weekly from './weekly.js';
 import Ten from './ten-day.js';
+import snow from './assets/snow.svg';
+import rain from './assets/rain.svg';
+import cloud from './assets/clouds.svg';
+import clear from './assets/clear.svg';
 
 
 function App(props) {
@@ -40,6 +44,7 @@ function App(props) {
   let [windspeed, setwindspeed] = useState([]);
   let [hourly,sethourly]=useState([]);
   let [filter,setfilter]=useState(false);
+  
 
   const updateInputValue = () => {
     console.warn("exported data is goin to be", exported);
@@ -183,7 +188,7 @@ function App(props) {
                       {postion.weather[0].main == "Snow" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          <img src={snow}/>
                           {postion.weather[0].main}
                         </li>
                       ) : null}
@@ -191,7 +196,7 @@ function App(props) {
                       {postion.weather[0].main == "Rain" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          <img src={rain}alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
@@ -199,14 +204,14 @@ function App(props) {
                       {postion.weather[0].main == "Clouds" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1eq.svg" alt="" />
+                          <img src={cloud}alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
                       {postion.weather[0].main == "Clear" ? (
                         <li>
                           {" "}
-                          <img src="http://svgshare.com/i/1fu.svg" alt="" />
+                          <img src={clear} alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
