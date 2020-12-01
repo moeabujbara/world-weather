@@ -1,30 +1,26 @@
-import React, {Suspense} from "react";
-import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
-import { weatherAPi,arabicWeatherApi } from "./api.js";
-import { coordinatesf } from "./api.js";
-import { autocompleteApi } from "./api.js";
+import { weatherAPi } from "./api/api.js";
+import { coordinatesf } from "./api/api.js";
+import { autocompleteApi } from "./api/api.js";
 import { useEffect, useState, useRef } from "react";
 import Moment from "react-moment";
-import Weatherforyourlocation from "./weatherforyourlocation";
+import Weatherforyourlocation from "./components/currentloactionweather/weatherforyourlocation.js";
 import GoogleMapReact from "google-map-react";
 import { lang } from "moment";
-import MapContainer from "./viewmap.js";
-import Autocomplete from "./autocomplete.js";
-import blue from "../src/assets/blue.jpg";
-import Filterbox from "./filterbox.js";
-import Hourly from "./hourly";
-import Daily from './daily.js';
-import Weekly from './weekly.js';
-import Ten from './ten-day.js';
-import snow from './assets/snow.svg';
-import rain from './assets/rain.svg';
-import cloud from './assets/clouds.svg';
-import clear from './assets/clear.svg';
-
+import MapContainer from "./components/Map/viewmap.js";
+import Autocomplete from "./components/autocomplete/autocomplete.js";
+import Filterbox from "./components/filterbox/filterbox.js";
+import Hourly from "./components/filtersoptions/hourly/hourly.js";
+import Daily from "./components/filtersoptions/daily/daily.js";
+import Weekly from "./components/filtersoptions/weekly/weekly.js";
+import Ten from "./components/filtersoptions/ten-days/ten-day.js";
+import snow from "./assets/snow.svg";
+import rain from "./assets/rain.svg";
+import cloud from "./assets/clouds.svg";
+import clear from "./assets/clear.svg";
+import Header from "./components/translate/header.js";
+import Box from "./components/translate/button.js";
 
 function App(props) {
   let [temp, settemp] = useState([]);
@@ -42,12 +38,14 @@ function App(props) {
   let [input, setInput] = useState([]);
   let [exported, setexported] = useState([]);
   let [windspeed, setwindspeed] = useState([]);
-  let [hourly,sethourly]=useState([]);
-  let [filter,setfilter]=useState(false);
-  
+  let [hourly, sethourly] = useState([]);
+  let [filter, setfilter] = useState(false);
+  let languageStoredInLocalStorage = localStorage.getItem("language");
+  let [language, setLanguage] = useState(
+    languageStoredInLocalStorage ? languageStoredInLocalStorage : "English"
+  );
 
   const updateInputValue = () => {
-    console.warn("exported data is goin to be", exported);
     setcheck(true);
     fetch(exported);
     setbool(true);
@@ -76,71 +74,97 @@ function App(props) {
       });
     }
   };
-  fetch = async (props) => {
-    try {
-      let response = await coordinatesf(props);
-      setcenter(response.data.results[0].geometry, center);
-      let weatherresponse = await weatherAPi(
-        response.data.results[0].geometry.lat,
-        response.data.results[0].geometry.lng
-      );
-      setweatherdata(weatherresponse.data.daily, weatherdata);
-      console.warn("weatherdata", weatherdata);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+    fetch = async (props) => {
+      try {
+        let response = await coordinatesf(props);
+        setcenter(response.data.results[0].geometry, center);
+        let weatherresponse = await weatherAPi(
+          response.data.results[0].geometry.lat,
+          response.data.results[0].geometry.lng
+        );
+        setweatherdata(weatherresponse.data.daily, weatherdata);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+ 
+  
   useEffect(() => {
-    fetch();
+     fetch();
   }, []);
 
   const handleChange = (newvalue) => {
     setexported(newvalue);
   };
-  const handleChange_hourly=(newvalue)=>{
+  const handleChange_hourly = (newvalue) => {
     sethourly(newvalue);
     setfilter(true);
-    console.warn("hourly from app",hourly)
-  }
+  };
+  const storeLanguageInLocalStorage = (language) => {
+    localStorage.setItem("language", language);
+  };
+
+  const handleSetLanguage = (e) => {
+    setLanguage(e.target.value);
+  };
 
   return (
-
     <div className="text-white text-center overflow-auto container">
-   <Suspense fallback="loading">
-   <h3 className="mt-2 font-weight-bold">Hello , select your city !</h3>
-     </Suspense> 
-     
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="#">
+            Weather
+          </a>
+          <div className="language-select">
+            <select
+              className="custom-select"
+              value={props.language}
+              onChange={handleSetLanguage}
+            >
+              <option value="English">English</option>
+              <option value="Arabic">العربية</option>
+            </select>
+          </div>
+        </div>
+      </nav>
+      <h3 className="mt-5 font-weight-bold">
+        <Header language={language} />
+      </h3>
+
       <div className="flex-right">
-      <Filterbox value={props.value}
-          onClick={handleChange_hourly}></Filterbox>
+        <Filterbox
+          value={props.value}
+          language={props.language}
+          onClick={handleChange_hourly}
+        ></Filterbox>
         <Autocomplete
           value={props.value}
           onChange={handleChange}
         ></Autocomplete>
         <br />
-        {exported=="" ? (
-           <button
-           id="button"
-           className="mt-2 btn btn-info rounded "
-           size="md"
-           onClick={updateInputValue}
-           disabled
-         >
-           Check Weather
-         </button>
-        )
-        :( <button
-          id="button"
-          className="mt-2 btn btn-info rounded "
-          size="md"
-          onClick={updateInputValue}
-        >
-          Check Weather
-        </button>)
-        }
-       
+        {exported == "" ? (
+          <button
+            id="button"
+            className="mt-2 btn btn-info rounded "
+            size="md"
+            onClick={updateInputValue}
+            disabled
+          >
+            <Box language={language} />
+          </button>
+        ) : (
+          <button
+            id="button"
+            className="mt-2 btn btn-info rounded "
+            size="md"
+            onClick={updateInputValue}
+          >
+            <Box language={language} />
+          </button>
+        )}
+
         <br></br>
-        {check && filter==false ? (
+        {check && filter == false ? (
           <div className="d-flex flex-column flex-md-row justify-content-between">
             <div className="mt-3" id="f">
               <MapContainer data={center}> </MapContainer>
@@ -159,26 +183,19 @@ function App(props) {
           </div>
         ) : null}
         <br />
-    {hourly=='hourly-weather' && check==true  ?(<Hourly 
-    hourdata={exported}
-    >
-    </Hourly>)
-    :(null)}
-    {hourly=='daily-weather' && check==true  ?(<Daily
-    dailydata={exported}
-    >
-    </Daily>)
-    :(null)}
-    {hourly=='weekly-weather' && check==true  ?(<Weekly
-    weeklydata={exported}
-    ></Weekly>)
-    :(null)}
-    {hourly=='ten-days-weather' && check==true  ?(<Ten
-    tendata={exported}
-    >
-    </Ten>)
-    :(null)}
-        {check==true && filter==false? (
+        {hourly == "hourly-weather" && check == true ? (
+          <Hourly hourdata={exported}></Hourly>
+        ) : null}
+        {hourly == "daily-weather" && check == true ? (
+          <Daily dailydata={exported}></Daily>
+        ) : null}
+        {hourly == "weekly-weather" && check == true ? (
+          <Weekly weeklydata={exported}></Weekly>
+        ) : null}
+        {hourly == "ten-days-weather" && check == true ? (
+          <Ten tendata={exported}></Ten>
+        ) : null}
+        {check == true && filter == false ? (
           <div className="d-flex flex-wrap justify-content-center justify-content-lg-between mt-3 text-white font-weight-bold">
             {weatherdata.slice(0, 6).map((postion, index) => (
               <div id="card">
@@ -188,7 +205,7 @@ function App(props) {
                       {postion.weather[0].main == "Snow" ? (
                         <li>
                           {" "}
-                          <img src={snow}/>
+                          <img src={snow} />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
@@ -196,7 +213,7 @@ function App(props) {
                       {postion.weather[0].main == "Rain" ? (
                         <li>
                           {" "}
-                          <img src={rain}alt="" />
+                          <img src={rain} alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
@@ -204,7 +221,7 @@ function App(props) {
                       {postion.weather[0].main == "Clouds" ? (
                         <li>
                           {" "}
-                          <img src={cloud}alt="" />
+                          <img src={cloud} alt="" />
                           {postion.weather[0].main}
                         </li>
                       ) : null}
@@ -218,9 +235,8 @@ function App(props) {
                     </ul>
                     <h6 id="tag">
                       {" "}
-                      high:<span id={"highTemp" + index}>
-                       {postion.temp.max} F
-                      </span>
+                      high:
+                      <span id={"highTemp" + index}>{postion.temp.max} F</span>
                     </h6>
                   </div>
                   <div className="col-6">
@@ -232,20 +248,18 @@ function App(props) {
 
                     <p className="city mt-1 ml-3">{postion.dew_point}</p>
                     <div className="x">
-                    low:<span id={"lowTemp" + index}>
-                       {postion.temp.min} F
-                      </span>
+                      low:
+                      <span id={"lowTemp" + index}>{postion.temp.min} F</span>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        ):(null)} 
-        {check != true && filter==false ? (<Weatherforyourlocation/>):(null)}
+        ) : null}
+        {check != true && filter == false ? <Weatherforyourlocation /> : null}
       </div>
     </div>
-   
   );
 }
 
